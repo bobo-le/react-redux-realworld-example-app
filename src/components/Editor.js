@@ -40,10 +40,12 @@ class Editor extends React.Component {
     super();
 
     const updateFieldEvent =
-      key => ev => this.props.onUpdateField(key, ev.text);
+      key => ev => this.props.onUpdateField(key, ev.target.value);
+    const updateBodyEvent =
+        key => ev => this.props.onUpdateField(key, ev.text);
     this.changeTitle = updateFieldEvent('title');
     this.changeDescription = updateFieldEvent('description');
-    this.changeBody = updateFieldEvent('body');
+    this.changeBody = updateBodyEvent('body');
     this.changeTagInput = updateFieldEvent('tagInput');
 
     this.watchForEnter = ev => {
