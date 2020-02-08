@@ -2,6 +2,9 @@ import ListErrors from './ListErrors';
 import React from 'react';
 import agent from '../agent';
 import { connect } from 'react-redux';
+import MdEditor from 'react-markdown-editor-lite'
+import MarkdownIt from 'markdown-it'
+import 'react-markdown-editor-lite/lib/index.css';
 import {
   ADD_TAG,
   EDITOR_PAGE_LOADED,
@@ -14,6 +17,8 @@ import {
 const mapStateToProps = state => ({
   ...state.editor
 });
+
+const mdParser = new MarkdownIt();
 
 const mapDispatchToProps = dispatch => ({
   onAddTag: () =>
@@ -35,7 +40,7 @@ class Editor extends React.Component {
     super();
 
     const updateFieldEvent =
-      key => ev => this.props.onUpdateField(key, ev.target.value);
+      key => ev => this.props.onUpdateField(key, ev.text);
     this.changeTitle = updateFieldEvent('title');
     this.changeDescription = updateFieldEvent('description');
     this.changeBody = updateFieldEvent('body');
@@ -91,6 +96,10 @@ class Editor extends React.Component {
     this.props.onUnload();
   }
 
+  handleEditorChange({html, text}) {
+  console.log('handleEditorChange', html, text)
+}
+
   render() {
     return (
       <div className="editor-page">
@@ -121,14 +130,40 @@ class Editor extends React.Component {
                       onChange={this.changeDescription} />
                   </fieldset>
 
-                  <fieldset className="form-group">
-                    <textarea
-                      className="form-control"
-                      rows="8"
-                      placeholder="Write your article (in markdown)"
-                      value={this.props.body}
-                      onChange={this.changeBody}>
-                    </textarea>
+                  {/*<fieldset className="form-group">*/}
+                  {/*  <textarea*/}
+                  {/*    className="form-control"*/}
+                  {/*    rows="8"*/}
+                  {/*    placeholder="Write your article (in markdown)"*/}
+                  {/*    value={this.props.body}*/}
+                  {/*    onChange={this.changeBody}>*/}
+                  {/*  </textarea>*/}
+                  {/*</fieldset>*/}
+                  <fieldset className='form-group'>
+                    <foo></foo>
+                  </fieldset>
+
+                  <fieldset className='form-group'>
+                    <MdEditor
+                          value={this.props.body}
+                          renderHTML={(text) => mdParser.render(text)}
+                          onChange={this.changeBody}
+                          config={{
+              view: {
+                menu: true,
+                md: true,
+                html: true,
+                fullScreen: true,
+                hideMenu: true,
+              },
+              table: {
+                maxRow: 5,
+                maxCol: 6,
+              },
+                           imageUrl: 'https://octodex.github.com/images/minion.png',
+
+              syncScrollMode: ['leftFollowRight', 'rightFollowLeft']}}
+                          />
                   </fieldset>
 
                   <fieldset className="form-group">

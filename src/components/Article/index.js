@@ -3,8 +3,10 @@ import CommentContainer from './CommentContainer';
 import React from 'react';
 import agent from '../../agent';
 import { connect } from 'react-redux';
-import marked from 'marked';
+import './test.css';
 import { ARTICLE_PAGE_LOADED, ARTICLE_PAGE_UNLOADED } from '../../constants/actionTypes';
+
+import ReactMarkdown from "react-markdown";
 
 const mapStateToProps = state => ({
   ...state.article,
@@ -34,8 +36,6 @@ class Article extends React.Component {
     if (!this.props.article) {
       return null;
     }
-
-    const markup = { __html: marked(this.props.article.body, { sanitize: true }) };
     const canModify = this.props.currentUser &&
       this.props.currentUser.username === this.props.article.author.username;
     return (
@@ -56,9 +56,7 @@ class Article extends React.Component {
 
           <div className="row article-content">
             <div className="col-xs-12">
-
-              <div dangerouslySetInnerHTML={markup}></div>
-
+              <ReactMarkdown source={this.props.article.body} />
               <ul className="tag-list">
                 {
                   this.props.article.tagList.map(tag => {
