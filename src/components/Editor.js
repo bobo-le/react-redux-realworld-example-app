@@ -2,9 +2,11 @@ import ListErrors from './ListErrors';
 import React from 'react';
 import agent from '../agent';
 import { connect } from 'react-redux';
-import MdEditor from 'react-markdown-editor-lite'
-import MarkdownIt from 'markdown-it'
+import MdEditor from 'react-markdown-editor-lite';
+import MarkdownIt from 'markdown-it';
 import 'react-markdown-editor-lite/lib/index.css';
+import Katex from 'katex';
+import TexMath from 'markdown-it-texmath';
 import {
   ADD_TAG,
   EDITOR_PAGE_LOADED,
@@ -19,6 +21,9 @@ const mapStateToProps = state => ({
 });
 
 const mdParser = new MarkdownIt();
+TexMath.use(Katex);
+mdParser.use(TexMath, { 'throwOnError': false, 'errorColor': ' #cc0000' });
+
 
 const mapDispatchToProps = dispatch => ({
   onAddTag: () =>
@@ -42,7 +47,7 @@ class Editor extends React.Component {
     const updateFieldEvent =
       key => ev => this.props.onUpdateField(key, ev.target.value);
     const updateBodyEvent =
-        key => ev => this.props.onUpdateField(key, ev.text);
+      key => ev => this.props.onUpdateField(key, ev.text);
     this.changeTitle = updateFieldEvent('title');
     this.changeDescription = updateFieldEvent('description');
     this.changeBody = updateBodyEvent('body');
@@ -98,9 +103,9 @@ class Editor extends React.Component {
     this.props.onUnload();
   }
 
-  handleEditorChange({html, text}) {
-  console.log('handleEditorChange', html, text)
-}
+  handleEditorChange({ html, text }) {
+    console.log('handleEditorChange', html, text);
+  }
 
   render() {
     return (
@@ -120,7 +125,7 @@ class Editor extends React.Component {
                       type="text"
                       placeholder="Article Title"
                       value={this.props.title}
-                      onChange={this.changeTitle} />
+                      onChange={this.changeTitle}/>
                   </fieldset>
 
                   <fieldset className="form-group">
@@ -129,43 +134,31 @@ class Editor extends React.Component {
                       type="text"
                       placeholder="What's this article about?"
                       value={this.props.description}
-                      onChange={this.changeDescription} />
-                  </fieldset>
-
-                  {/*<fieldset className="form-group">*/}
-                  {/*  <textarea*/}
-                  {/*    className="form-control"*/}
-                  {/*    rows="8"*/}
-                  {/*    placeholder="Write your article (in markdown)"*/}
-                  {/*    value={this.props.body}*/}
-                  {/*    onChange={this.changeBody}>*/}
-                  {/*  </textarea>*/}
-                  {/*</fieldset>*/}
-                  <fieldset className='form-group'>
-                    <foo></foo>
+                      onChange={this.changeDescription}/>
                   </fieldset>
 
                   <fieldset className='form-group'>
                     <MdEditor
-                          value={this.props.body}
-                          renderHTML={(text) => mdParser.render(text)}
-                          onChange={this.changeBody}
-                          config={{
-              view: {
-                menu: true,
-                md: true,
-                html: true,
-                fullScreen: true,
-                hideMenu: true,
-              },
-              table: {
-                maxRow: 5,
-                maxCol: 6,
-              },
-                           imageUrl: 'https://octodex.github.com/images/minion.png',
+                      value={this.props.body}
+                      renderHTML={(text) => mdParser.render(text)}
+                      onChange={this.changeBody}
+                      config={{
+                        view: {
+                          menu: true,
+                          md: true,
+                          html: true,
+                          fullScreen: true,
+                          hideMenu: true,
+                        },
+                        table: {
+                          maxRow: 5,
+                          maxCol: 6,
+                        },
+                        imageUrl: 'https://octodex.github.com/images/minion.png',
 
-              syncScrollMode: ['leftFollowRight', 'rightFollowLeft']}}
-                          />
+                        syncScrollMode: [ 'leftFollowRight', 'rightFollowLeft' ]
+                      }}
+                    />
                   </fieldset>
 
                   <fieldset className="form-group">
@@ -175,15 +168,15 @@ class Editor extends React.Component {
                       placeholder="Enter tags"
                       value={this.props.tagInput}
                       onChange={this.changeTagInput}
-                      onKeyUp={this.watchForEnter} />
+                      onKeyUp={this.watchForEnter}/>
 
                     <div className="tag-list">
                       {
                         (this.props.tagList || []).map(tag => {
                           return (
                             <span className="tag-default tag-pill" key={tag}>
-                              <i  className="ion-close-round"
-                                  onClick={this.removeTagHandler(tag)}>
+                              <i className="ion-close-round"
+                                 onClick={this.removeTagHandler(tag)}>
                               </i>
                               {tag}
                             </span>

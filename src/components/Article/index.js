@@ -5,8 +5,13 @@ import agent from '../../agent';
 import { connect } from 'react-redux';
 import './test.css';
 import { ARTICLE_PAGE_LOADED, ARTICLE_PAGE_UNLOADED } from '../../constants/actionTypes';
+import MarkdownIt from 'markdown-it';
+import Katex from 'katex'
+import TexMath from 'markdown-it-texmath'
 
-import ReactMarkdown from "react-markdown";
+const mdParser = new MarkdownIt();
+TexMath.use(Katex)
+mdParser.use(TexMath, {"throwOnError" : false, "errorColor" : " #cc0000"})
 
 const mapStateToProps = state => ({
   ...state.article,
@@ -38,6 +43,8 @@ class Article extends React.Component {
     }
     const canModify = this.props.currentUser &&
       this.props.currentUser.username === this.props.article.author.username;
+
+    const foo = mdParser.render(this.props.article.body);
     return (
       <div className="article-page">
 
@@ -47,7 +54,7 @@ class Article extends React.Component {
             <h1>{this.props.article.title}</h1>
             <ArticleMeta
               article={this.props.article}
-              canModify={canModify} />
+              canModify={canModify}/>
 
           </div>
         </div>
@@ -56,7 +63,7 @@ class Article extends React.Component {
 
           <div className="row article-content">
             <div className="col-xs-12">
-              <ReactMarkdown source={this.props.article.body} />
+              <div dangerouslySetInnerHTML={{ __html: foo }}/>
               <ul className="tag-list">
                 {
                   this.props.article.tagList.map(tag => {
@@ -74,7 +81,7 @@ class Article extends React.Component {
             </div>
           </div>
 
-          <hr />
+          <hr/>
 
           <div className="article-actions">
           </div>
@@ -84,7 +91,7 @@ class Article extends React.Component {
               comments={this.props.comments || []}
               errors={this.props.commentErrors}
               slug={this.props.match.params.id}
-              currentUser={this.props.currentUser} />
+              currentUser={this.props.currentUser}/>
           </div>
         </div>
       </div>
