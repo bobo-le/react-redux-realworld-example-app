@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import './test.css';
 import { ARTICLE_PAGE_LOADED, ARTICLE_PAGE_UNLOADED } from '../../constants/actionTypes';
 import MarkdownIt from 'markdown-it';
-import Katex from 'katex'
-import TexMath from 'markdown-it-texmath'
+import Katex from 'katex';
+import TexMath from 'markdown-it-texmath';
+import underline from 'markdown-it-plugin-underline';
 
 const mdParser = new MarkdownIt();
-TexMath.use(Katex)
-mdParser.use(TexMath, {"throwOnError" : false, "errorColor" : " #cc0000"})
+TexMath.use(Katex);
+mdParser.use(TexMath, { 'throwOnError': false, 'errorColor': ' #cc0000' });
+mdParser.use(underline);
 
 const mapStateToProps = state => ({
   ...state.article,

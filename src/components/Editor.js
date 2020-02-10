@@ -7,6 +7,7 @@ import MarkdownIt from 'markdown-it';
 import 'react-markdown-editor-lite/lib/index.css';
 import Katex from 'katex';
 import TexMath from 'markdown-it-texmath';
+import underline from 'markdown-it-plugin-underline'
 import {
   ADD_TAG,
   EDITOR_PAGE_LOADED,
@@ -23,7 +24,7 @@ const mapStateToProps = state => ({
 const mdParser = new MarkdownIt();
 TexMath.use(Katex);
 mdParser.use(TexMath, { 'throwOnError': false, 'errorColor': ' #cc0000' });
-
+mdParser.use(underline)
 
 const mapDispatchToProps = dispatch => ({
   onAddTag: () =>
